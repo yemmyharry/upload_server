@@ -6,4 +6,5 @@ type UploadService interface {
 	HealthCheck() error
 	UploadFile(file domain.File) error
 	GetFiles() ([]domain.File, error)
+	DownloadFile(filename string) (*domain.File, error)
 }

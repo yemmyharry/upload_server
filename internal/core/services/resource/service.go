@@ -26,3 +26,7 @@ func (s Service) UploadFile(file domain.File) error {
 func (s Service) GetFiles() ([]domain.File, error) {
 	return s.uploadRepository.GetFiles()
 }
+
+func (s Service) DownloadFile(filename string) (*domain.File, error) {
+	return s.uploadRepository.DownloadFile(filename)
+}
