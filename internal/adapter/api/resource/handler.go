@@ -30,7 +30,7 @@ func (s *HTTPHandler) UploadFile(c *gin.Context) {
 
 	filename := fmt.Sprintf("%s%s", strconv.FormatInt(file.Size, 10), filepath.Ext(file.Filename))
 	if err := c.SaveUploadedFile(file, filename); err != nil {
-		logger.Error("Failed to save file")
+		logger.Error("Error saving file: " + err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
 		return
 	}
@@ -39,4 +39,17 @@ func (s *HTTPHandler) UploadFile(c *gin.Context) {
 
 	logger.Info("File uploaded successfully")
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
+}
+
+func (s *HTTPHandler) GetAllFiles(c *gin.Context) {
+	logger.Info("Get files called")
+
+	files, err := s.uploadService.GetFiles()
+	if err != nil {
+		logger.Error("Error getting files: " + err.Error())
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"List of files": files})
 }
