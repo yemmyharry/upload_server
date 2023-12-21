@@ -22,3 +22,7 @@ func (s Service) HealthCheck() error {
 func (s Service) UploadFile(file domain.File) error {
 	return s.uploadRepository.UploadFile(file)
 }
+
+func (s Service) GetFiles() ([]domain.File, error) {
+	return s.uploadRepository.GetFiles()
+}
