@@ -18,3 +18,9 @@ func (m UploadRepositoryDB) UploadFile(file domain.File) error {
 	m.db.Create(&file)
 	return nil
 }
+
+func (m UploadRepositoryDB) GetFiles() ([]domain.File, error) {
+	var files []domain.File
+	m.db.Find(&files)
+	return files, nil
+}
