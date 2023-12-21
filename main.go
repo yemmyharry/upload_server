@@ -16,7 +16,7 @@ func main() {
 		logger.Error("Error loading .env file")
 	}
 	router := gin.Default()
-	database := resource.NewUploadRepositoryDB()
+	database := resource.UploadRepositoryDB{}
 	service := services.New(database)
 	handler := adapter.NewHTTPHandler(service)
 	handler.Routes(router)
