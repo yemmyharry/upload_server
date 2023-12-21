@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"errors"
 	"os"
 )
 
@@ -14,9 +15,9 @@ func (m UploadRepositoryDB) GetFiles() ([]string, error) {
 
 	var fileNames []string
 
-	files, err := os.ReadDir(os.Getenv("DIRECTORY"))
+	files, err := os.ReadDir("files")
 	if err != nil {
-		return nil, err
+		return nil, errors.New("no file uploaded yet")
 	}
 
 	for _, file := range files {
