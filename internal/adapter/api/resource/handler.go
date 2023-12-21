@@ -53,3 +53,18 @@ func (s *HTTPHandler) GetAllFiles(c *gin.Context) {
 
 	c.JSON(200, gin.H{"List of files": files})
 }
+
+func (s *HTTPHandler) DownloadFile(c *gin.Context) {
+	logger.Info("Download file called")
+
+	filename := c.Param("filename")
+
+	file, err := s.uploadService.DownloadFile(filename)
+	if err != nil {
+		logger.Error("Error retrieving file :" + err.Error())
+		return
+	}
+
+	filePath := fmt.Sprintf("./%s", file.Name)
+	c.File(filePath)
+}
