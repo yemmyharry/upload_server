@@ -1,35 +1,35 @@
 package resource
 
 import (
-	domain "upload_server/internal/core/domain/resource"
-	"upload_server/internal/core/logger"
+	"os"
 )
 
 func (m UploadRepositoryDB) HealthCheck() error {
 	return nil
 }
 
-func (m UploadRepositoryDB) UploadFile(file domain.File) error {
-	result := m.db.Where("name = ?", file.Name).First(&domain.File{})
-	if result.Error == nil {
-		logger.Info("File already exists")
-		return result.Error
-	}
-	m.db.Create(&file)
-	return nil
-}
+//func (m UploadRepositoryDB) UploadFile(file domain.File) error {
+//	result := m.db.Where("name = ?", file.Name).First(&domain.File{})
+//	if result.Error == nil {
+//		logger.Info("File already exists")
+//		return result.Error
+//	}
+//	m.db.Create(&file)
+//	return nil
+//}
 
-func (m UploadRepositoryDB) GetFiles() ([]domain.File, error) {
-	var files []domain.File
-	m.db.Find(&files)
-	return files, nil
-}
+func (m UploadRepositoryDB) GetFiles() ([]string, error) {
 
-func (m UploadRepositoryDB) DownloadFile(filename string) (*domain.File, error) {
-	var file domain.File
-	if err := m.db.Where("name = ?", filename).First(&file).Error; err != nil {
-		logger.Error("Error getting file: " + err.Error())
+	var fileNames []string
+
+	files, err := os.ReadDir(os.Getenv("DIRECTORY"))
+	if err != nil {
 		return nil, err
 	}
-	return &file, nil
+
+	for _, file := range files {
+		fileNames = append(fileNames, file.Name())
+	}
+
+	return fileNames, nil
 }
