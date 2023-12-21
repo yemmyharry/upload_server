@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
-	domain "upload_server/internal/core/domain/resource"
 	"upload_server/internal/core/logger"
 )
 
@@ -29,13 +28,12 @@ func (s *HTTPHandler) UploadFile(c *gin.Context) {
 	}
 
 	filename := fmt.Sprintf("%s%s", strconv.FormatInt(file.Size, 10), filepath.Ext(file.Filename))
-	if err := c.SaveUploadedFile(file, filename); err != nil {
+	filePath := filepath.Join("files", filename)
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
 		logger.Error("Error saving file: " + err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
 		return
 	}
-
-	_ = s.uploadService.UploadFile(domain.File{Name: filename})
 
 	logger.Info("File uploaded successfully")
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
@@ -56,15 +54,7 @@ func (s *HTTPHandler) GetAllFiles(c *gin.Context) {
 
 func (s *HTTPHandler) DownloadFile(c *gin.Context) {
 	logger.Info("Download file called")
-
 	filename := c.Param("filename")
-
-	file, err := s.uploadService.DownloadFile(filename)
-	if err != nil {
-		logger.Error("Error retrieving file :" + err.Error())
-		return
-	}
-
-	filePath := fmt.Sprintf("./%s", file.Name)
+	filePath := filepath.Join("files", filename)
 	c.File(filePath)
 }
