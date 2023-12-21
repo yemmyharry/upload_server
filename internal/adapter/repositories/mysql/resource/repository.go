@@ -24,3 +24,12 @@ func (m UploadRepositoryDB) GetFiles() ([]domain.File, error) {
 	m.db.Find(&files)
 	return files, nil
 }
+
+func (m UploadRepositoryDB) DownloadFile(filename string) (*domain.File, error) {
+	var file domain.File
+	if err := m.db.Where("name = ?", filename).First(&file).Error; err != nil {
+		logger.Error("Error getting file: " + err.Error())
+		return nil, err
+	}
+	return &file, nil
+}
