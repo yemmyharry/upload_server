@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
-	_ "upload_server/internal/core/domain/resource"
+	domain "upload_server/internal/core/domain/resource"
 )
 
 type UploadRepositoryDB struct {
@@ -27,6 +27,9 @@ func NewUploadRepositoryDB() *UploadRepositoryDB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//client.AutoMigrate(&domain.File{})
+	err = client.AutoMigrate(&domain.File{})
+	if err != nil {
+		return nil
+	}
 	return &UploadRepositoryDB{client}
 }
